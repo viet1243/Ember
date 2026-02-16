@@ -5,42 +5,46 @@
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>Unity WebGL Player | Ember Game</title>
-  <!-- Landscape Optimization -->
+
+  <!-- Viewport chuẩn mobile -->
   <meta name="viewport"
-    content="width=device-height, height=device-width, initial-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover">
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
   <style>
-    html,
-    body {
+    html, body {
       margin: 0;
       padding: 0;
       overflow: hidden;
       background: black;
       height: 100%;
       width: 100%;
-      position: fixed;
     }
 
+    /* Container full màn hình */
     #unity-container {
       position: fixed;
-      top: 0;
-      left: 0;
+      inset: 0;
       width: 100vw;
       height: 100vh;
       touch-action: none;
     }
 
+    /* Canvas full màn hình */
     canvas#unity-canvas {
-      width: 100vw !important;
-      height: 100vh !important;
+      width: 100vw;
+      height: 100vh;
       display: block;
+      background: black;
     }
 
-    #unity-loading-bar,
-    #unity-footer {
-      position: absolute;
-      width: 100%;
-      text-align: center;
+    /* Nếu thiết bị đang cầm dọc → xoay ngang */
+    @media screen and (orientation: portrait) {
+      canvas#unity-canvas {
+        transform: rotate(90deg);
+        transform-origin: center center;
+        width: 100vh;
+        height: 100vw;
+      }
     }
 
     #unity-warning {
@@ -54,25 +58,15 @@
 </head>
 
 <body>
-  <canvas id="unity-canvas"></canvas>
+  <div id="unity-container">
+    <canvas id="unity-canvas"></canvas>
+  </div>
+
   <script src="Build/WebGL.loader.js"></script>
   <script>
-    // if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-    //   // Mobile device style: fill the whole browser client area with the game canvas:
-    //   var meta = document.createElement('meta');
-    //   meta.name = 'viewport';
-    //   meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-    //   document.getElementsByTagName('head')[0].appendChild(meta);
+    const canvas = document.querySelector("#unity-canvas");
 
-    //   var canvas = document.querySelector("#unity-canvas");
-    //   canvas.style.width = "100%";
-    //   canvas.style.height = "100%";
-    //   canvas.style.position = "fixed";
-
-    //   document.body.style.textAlign = "left";
-    // }
-
-    createUnityInstance(document.querySelector("#unity-canvas"), {
+    createUnityInstance(canvas, {
       dataUrl: "Build/WebGL.data",
       frameworkUrl: "Build/WebGL.framework.js",
       codeUrl: "Build/WebGL.wasm",
@@ -80,8 +74,8 @@
       companyName: "DefaultCompany",
       productName: "Ember Game",
       productVersion: "1.0",
-      // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
-      // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+      // matchWebGLToCanvasSize: false,
+      // devicePixelRatio: 1,
     });
   </script>
 </body>
